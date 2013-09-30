@@ -1,5 +1,14 @@
+require 'uri'
+
 class PostsController < ApplicationController
   before_action :set_post, only: [:show, :edit, :update, :destroy]
+  before_save :permalink_updation
+  validates_uniqueness_of :permalink
+
+
+  # Defining URL
+  #URL of my localhost server
+  MYURL = "localhost:3000/"
 
   # GET /posts
   # GET /posts.json
@@ -60,6 +69,15 @@ class PostsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
+  def permalink_updation
+
+    if (MYURL =~ URI::regexp)
+      self.permalink = MYURL.to_s + title.to_s
+    end
+
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
